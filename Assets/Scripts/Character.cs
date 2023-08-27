@@ -19,6 +19,7 @@ public class Character : MonoBehaviour
     public Texture JumpTexture;
 
     public float roadPosition = 0;
+    public float roadZOffset = 0;
     public SplineContainer Road;
 
     private Vector3 ToVec(float3 value)
@@ -51,8 +52,8 @@ public class Character : MonoBehaviour
         var frameCount = CurrentTexture.width / CurrentTexture.height;
         Frame += FrameRate * Time.deltaTime;
         Frame %= frameCount;
-        SetTextureScale( 1.0f / frameCount * Flipped, 1.0f);
-        SetTextureOffset( 1.0f / frameCount * Mathf.FloorToInt(Frame), 0f);
+        SetTextureScale(1.0f / frameCount * Flipped, 1.0f);
+        SetTextureOffset(1.0f / frameCount * Mathf.FloorToInt(Frame), 0f);
     }
 
     void SetTextureScale(float x, float y)
@@ -72,6 +73,8 @@ public class Character : MonoBehaviour
     void WalkUpdate()
     {
         var offset = 0;
+        var zOffset = 0;
+        FrameRate = 3;
 
         CurrentTexture = IdleTexture;
 
@@ -86,8 +89,17 @@ public class Character : MonoBehaviour
             Flipped = -1;
         }
 
+        if (Input.GetKey(KeyCode.W))
+        {
+            zOffset += 1;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            zOffset -= 1;
+        }
+
         var speed = WalkSpeed;
-        if (offset != 0)
+        if (offset != 0 || zOffset != 0)
         {
             CurrentTexture = WalkTexture;
 
@@ -95,9 +107,12 @@ public class Character : MonoBehaviour
             {
                 speed = RunSpeed;
                 CurrentTexture = RunTexture;
+                FrameRate = 6;
             }
         }
         roadPosition += offset * speed * Time.deltaTime;
+        roadZOffset += zOffset * speed * Time.deltaTime;
+        roadZOffset = Mathf.Clamp(roadZOffset, -1f, 1f);
 
         SpriteRenderer.material.mainTexture = CurrentTexture;
         ShadowRenderer.material.mainTexture = CurrentTexture;
@@ -116,6 +131,11 @@ public class Character : MonoBehaviour
         Vector3 pos = Road.transform.position + ToVec(position);
         transform.position = pos;
         transform.right = tangent;
+
+        SpriteRenderer.transform.localPosition = new Vector3(0, 0.5f, roadZOffset);
+        ShadowRenderer.transform.localPosition = new Vector3(0, 0.5f, roadZOffset);
+
+        //transform.position += transform.forward * roadZOffset;
         //transform.up = up;
     }
 
