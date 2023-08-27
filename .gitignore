@@ -4,3 +4,5 @@ Logs
 UserSettings
 Temp
 .vs
+*.csproj
+*.sln
