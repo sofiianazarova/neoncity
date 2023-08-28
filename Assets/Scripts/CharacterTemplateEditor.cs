@@ -31,6 +31,9 @@ public class CharacterTemplateEditor : Editor
         SetTexture(ref template.WalkAnimation.Texture, folderPath, "Walk");
         SetTexture(ref template.RunAnimation.Texture, folderPath, "Run");
         SetTexture(ref template.JumpAnimation.Texture, folderPath, "Jump");
+
+        EditorUtility.SetDirty(template);
+        AssetDatabase.SaveAssets();
     }
 
     void SetTexture(ref Texture texture, string folderPath, string name)
