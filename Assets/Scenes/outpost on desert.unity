@@ -11435,7 +11435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d03fac69f686544db8bc14696b767d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Template: {fileID: 7032891960212627299, guid: e7c7c08dec388164ca0641bd153d6f93, type: 3}
+  Template: {fileID: 11400000, guid: a9017c9483fe0714286ea6cabf7ce557, type: 2}
   Road: {fileID: 2002742699}
   ShadowRenderer: {fileID: 299489254}
   SpriteRenderer: {fileID: 1470691892}

@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.UI;
 
 [CustomEditor(typeof(CharacterTemplate))]
 public class CharacterTemplateEditor : Editor
@@ -12,17 +15,42 @@ public class CharacterTemplateEditor : Editor
 
         CharacterTemplate template = (CharacterTemplate)target;
 
-        EditAnimationData("Idle", ref template.IdleAnimation);
-        EditAnimationData("Walk", ref template.WalkAnimation);
-        EditAnimationData("Run", ref template.RunAnimation);
-        EditAnimationData("Jump", ref template.JumpAnimation);
+        if (GUILayout.Button("Select folder"))
+        {
+            var folderPath = EditorUtility.OpenFolderPanel("texture folder", "folder", "name");
+            TrySetTextureFromFolder(folderPath);
+        }
+
+        DrawTexturePaths();
     }
 
-    void EditAnimationData(string name, ref AnimationData data)
+    void TrySetTextureFromFolder(string folderPath)
     {
-        GUILayout.Label(name);
-        data.Texture = EditorGUILayout.ObjectField("Texture", data.Texture, typeof(Texture), data.Texture) as Texture;
-        data.FrameRate = EditorGUILayout.FloatField("FrameRate", data.FrameRate);
-        data.Speed = EditorGUILayout.FloatField("Speed", data.Speed);
+        CharacterTemplate template = (CharacterTemplate)target;
+        SetTexture(ref template.IdleAnimation.Texture, folderPath, "Idle");
+        SetTexture(ref template.WalkAnimation.Texture, folderPath, "Walk");
+        SetTexture(ref template.RunAnimation.Texture, folderPath, "Run");
+        SetTexture(ref template.JumpAnimation.Texture, folderPath, "Jump");
+    }
+
+    void SetTexture(ref Texture texture, string folderPath, string name)
+    {
+        var path = Path.Combine(folderPath, name + ".png");
+        path = "Assets" + path.Substring(Application.dataPath.Length);
+        texture = AssetDatabase.LoadAssetAtPath(path, typeof(Texture)) as Texture;
+    }
+
+    void DrawTexturePaths()
+    {
+        CharacterTemplate template = (CharacterTemplate)target;
+        DrawTexturePath(template.IdleAnimation.Texture);
+        DrawTexturePath(template.WalkAnimation.Texture);
+        DrawTexturePath(template.RunAnimation.Texture);
+        DrawTexturePath(template.JumpAnimation.Texture);
+    }
+
+    void DrawTexturePath(Texture texture)
+    {
+        GUILayout.Label(AssetDatabase.GetAssetPath(texture));
     }
 }
