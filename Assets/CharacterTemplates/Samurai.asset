@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94dd287ec646f6a4098a81d56bdc8b84, type: 3}
+  m_Name: Samurai
+  m_EditorClassIdentifier: 
+  IdleAnimation:
+    Texture: {fileID: 2800000, guid: 30e9d1feb9f0c324a85506c979309a44, type: 3}
+    FrameRate: 3
+    Speed: 0
+  WalkAnimation:
+    Texture: {fileID: 2800000, guid: 2462c16fa7623864d9e906b228a55e50, type: 3}
+    FrameRate: 3
+    Speed: 2
+  RunAnimation:
+    Texture: {fileID: 2800000, guid: a1be82a8048f23d499586460dfc521c4, type: 3}
+    FrameRate: 6
+    Speed: 6
+  JumpAnimation:
+    Texture: {fileID: 2800000, guid: f5241285218d8924fb1005ab112f0538, type: 3}
+    FrameRate: 0
+    Speed: 0

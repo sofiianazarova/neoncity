@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94dd287ec646f6a4098a81d56bdc8b84, type: 3}
+  m_Name: Raider3
+  m_EditorClassIdentifier: 
+  IdleAnimation:
+    Texture: {fileID: 2800000, guid: e743171908a2e454e8ee45241b8607e6, type: 3}
+    FrameRate: 3
+    Speed: 0
+  WalkAnimation:
+    Texture: {fileID: 2800000, guid: ea1819db5510e064aa3c37751087a820, type: 3}
+    FrameRate: 3
+    Speed: 2
+  RunAnimation:
+    Texture: {fileID: 2800000, guid: 4d81b5ac7bac034468ecd7ad99510a33, type: 3}
+    FrameRate: 6
+    Speed: 6
+  JumpAnimation:
+    Texture: {fileID: 2800000, guid: c8b237d0dabcaca439574aa8bc9fd1b7, type: 3}
+    FrameRate: 0
+    Speed: 0
