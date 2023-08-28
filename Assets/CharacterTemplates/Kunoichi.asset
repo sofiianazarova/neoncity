@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94dd287ec646f6a4098a81d56bdc8b84, type: 3}
+  m_Name: Kunoichi
+  m_EditorClassIdentifier: 
+  IdleAnimation:
+    Texture: {fileID: 2800000, guid: 356e230db3e95ea439fbdf3a80c92177, type: 3}
+    FrameRate: 3
+    Speed: 0
+  WalkAnimation:
+    Texture: {fileID: 2800000, guid: b06fd4cd0ada696448e156ad94ce7c89, type: 3}
+    FrameRate: 3
+    Speed: 2
+  RunAnimation:
+    Texture: {fileID: 2800000, guid: 643189779b1f03244b2dd1890a8bbd8c, type: 3}
+    FrameRate: 6
+    Speed: 6
+  JumpAnimation:
+    Texture: {fileID: 2800000, guid: 079d8820da01d1f4189ae463132539e3, type: 3}
+    FrameRate: 0
+    Speed: 0
