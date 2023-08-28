@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5885085162655137519
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4877704053429789711}
+  - component: {fileID: 7032891960212627299}
+  m_Layer: 0
+  m_Name: Raider2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4877704053429789711
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5885085162655137519}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.9799998, z: -27.620003}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7032891960212627299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5885085162655137519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94dd287ec646f6a4098a81d56bdc8b84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IdleAnimation:
+    Texture: {fileID: 2800000, guid: 2a2c6f408d895b346b1b89d6e64173fb, type: 3}
+    FrameRate: 3
+    Speed: 0
+  WalkAnimation:
+    Texture: {fileID: 2800000, guid: 640e0fae0078a424e963351a9c1079fa, type: 3}
+    FrameRate: 3
+    Speed: 2
+  RunAnimation:
+    Texture: {fileID: 2800000, guid: 19ae9373283809e4db4c10f94235c986, type: 3}
+    FrameRate: 6
+    Speed: 6
+  JumpAnimation:
+    Texture: {fileID: 2800000, guid: af4f2dc7e4c60ff498cf51ef32534235, type: 3}
+    FrameRate: 0
+    Speed: 0

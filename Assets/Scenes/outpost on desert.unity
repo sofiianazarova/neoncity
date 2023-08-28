@@ -11435,17 +11435,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d03fac69f686544db8bc14696b767d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WalkSpeed: 2
-  RunSpeed: 6
-  IdleTexture: {fileID: 2800000, guid: 2a2c6f408d895b346b1b89d6e64173fb, type: 3}
-  WalkTexture: {fileID: 2800000, guid: 640e0fae0078a424e963351a9c1079fa, type: 3}
-  RunTexture: {fileID: 2800000, guid: 19ae9373283809e4db4c10f94235c986, type: 3}
-  JumpTexture: {fileID: 2800000, guid: af4f2dc7e4c60ff498cf51ef32534235, type: 3}
-  roadPosition: 0
-  roadZOffset: 0
+  Template: {fileID: 7032891960212627299, guid: e7c7c08dec388164ca0641bd153d6f93, type: 3}
   Road: {fileID: 2002742699}
   ShadowRenderer: {fileID: 299489254}
   SpriteRenderer: {fileID: 1470691892}
+  roadPosition: 0
+  roadZOffset: 0
+  Offset: 0
+  ZOffset: 0
 --- !u!4 &1165950148
 Transform:
   m_ObjectHideFlags: 0

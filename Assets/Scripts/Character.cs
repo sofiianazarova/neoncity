@@ -7,28 +7,28 @@ using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UIElements;
 using UnityEngine.Splines;
 using Spline = UnityEngine.Splines.Spline;
+using UnityEngine.Playables;
 
 public class Character : MonoBehaviour
 {
-    public float WalkSpeed = 2f;
-    public float RunSpeed = 5f;
-
-    public Texture IdleTexture;
-    public Texture WalkTexture;
-    public Texture RunTexture;
-    public Texture JumpTexture;
-
-    public float roadPosition = 0;
-    public float roadZOffset = 0;
+    public CharacterTemplate Template;
     public SplineContainer Road;
-
-    private Vector3 ToVec(float3 value)
-    {
-        return new Vector3(value.x, value.y, value.z);
-    }
 
     public MeshRenderer ShadowRenderer;
     public MeshRenderer SpriteRenderer;
+    public float roadPosition = 0;
+    public float roadZOffset = 0;
+   
+    private AnimationData Animation;
+    private float Frame = 0;
+    private float Flipped = 1.0f;
+    public float Offset = 0;
+    public float ZOffset = 0;
+
+    private void Start()
+    {
+        Animation = Template.IdleAnimation;
+    }
 
     void Update()
     {
@@ -37,20 +37,77 @@ public class Character : MonoBehaviour
         AnimationUpdate();
     }
 
-    private float Frame = 0;
-    private float FrameRate = 3;
-    private Texture CurrentTexture;
-    private float Flipped = 1.0f;
-
-    private void Start()
+    private Vector3 ToVec(float3 value)
     {
-        CurrentTexture = IdleTexture;
+        return new Vector3(value.x, value.y, value.z);
     }
+
+    void WalkUpdate()
+    {
+        Offset = 0;
+        ZOffset = 0;
+
+        Animation = Template.IdleAnimation;
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            Offset += 1;
+            Flipped = 1;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            Offset -= 1;
+            Flipped = -1;
+        }
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            ZOffset += 1;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            ZOffset -= 1;
+        }
+
+        if (Offset != 0 || ZOffset != 0)
+        {
+            Animation = Template.WalkAnimation;
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                Animation = Template.RunAnimation;
+            }
+        }
+
+        roadPosition += Offset * Animation.Speed * Time.deltaTime;
+        roadZOffset += ZOffset * Animation.Speed * Time.deltaTime;
+        roadZOffset = Mathf.Clamp(roadZOffset, -1f, 1f);
+
+        SpriteRenderer.material.mainTexture = Animation.Texture;
+        ShadowRenderer.material.mainTexture = Animation.Texture;
+        ShadowRenderer.material.mainTexture.wrapMode = TextureWrapMode.Repeat;
+        SpriteRenderer.material.mainTexture.wrapMode = TextureWrapMode.Repeat;
+        ShadowRenderer.material.mainTexture.filterMode = FilterMode.Point;
+        SpriteRenderer.material.mainTexture.filterMode = FilterMode.Point;
+    }
+
+    void PinToSpline()
+    {
+        var k = roadPosition / Road.Spline.CalculateLength(Matrix4x4.identity);
+        Road.Spline.Evaluate(k, out float3 position, out float3 tangent, out float3 up);
+
+        Vector3 pos = Road.transform.position + ToVec(position);
+        transform.position = pos;
+        transform.right = tangent;
+
+        SpriteRenderer.transform.localPosition = new Vector3(0, 0.5f, roadZOffset);
+        ShadowRenderer.transform.localPosition = new Vector3(0, 0.5f, roadZOffset);
+    }
+
 
     void AnimationUpdate()
     {
-        var frameCount = CurrentTexture.width / CurrentTexture.height;
-        Frame += FrameRate * Time.deltaTime;
+        var frameCount = Animation.Texture.width / Animation.Texture.height;
+        Frame += Animation.FrameRate * Time.deltaTime;
         Frame %= frameCount;
         SetTextureScale(1.0f / frameCount * Flipped, 1.0f);
         SetTextureOffset(1.0f / frameCount * Mathf.FloorToInt(Frame), 0f);
@@ -70,98 +127,6 @@ public class Character : MonoBehaviour
         ShadowRenderer.material.mainTextureOffset = value;
     }
 
-    void WalkUpdate()
-    {
-        var offset = 0;
-        var zOffset = 0;
-        FrameRate = 3;
 
-        CurrentTexture = IdleTexture;
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            offset += 1;
-            Flipped = 1;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            offset -= 1;
-            Flipped = -1;
-        }
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            zOffset += 1;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            zOffset -= 1;
-        }
-
-        var speed = WalkSpeed;
-        if (offset != 0 || zOffset != 0)
-        {
-            CurrentTexture = WalkTexture;
-
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                speed = RunSpeed;
-                CurrentTexture = RunTexture;
-                FrameRate = 6;
-            }
-        }
-        roadPosition += offset * speed * Time.deltaTime;
-        roadZOffset += zOffset * speed * Time.deltaTime;
-        roadZOffset = Mathf.Clamp(roadZOffset, -1f, 1f);
-
-        SpriteRenderer.material.mainTexture = CurrentTexture;
-        ShadowRenderer.material.mainTexture = CurrentTexture;
-        ShadowRenderer.material.mainTexture.wrapMode = TextureWrapMode.Repeat;
-        SpriteRenderer.material.mainTexture.wrapMode = TextureWrapMode.Repeat;
-        ShadowRenderer.material.mainTexture.filterMode = FilterMode.Point;
-        SpriteRenderer.material.mainTexture.filterMode = FilterMode.Point;
-
-    }
-
-    void PinToSpline()
-    {
-        var k = roadPosition / Road.Spline.CalculateLength(Matrix4x4.identity);
-        Road.Spline.Evaluate(k, out float3 position, out float3 tangent, out float3 up);
-
-        Vector3 pos = Road.transform.position + ToVec(position);
-        transform.position = pos;
-        transform.right = tangent;
-
-        SpriteRenderer.transform.localPosition = new Vector3(0, 0.5f, roadZOffset);
-        ShadowRenderer.transform.localPosition = new Vector3(0, 0.5f, roadZOffset);
-
-        //transform.position += transform.forward * roadZOffset;
-        //transform.up = up;
-    }
-
-    public void BuildMesh()
-    {
-        var mesh = new Mesh();
-        mesh.vertices = new Vector3[]
-        {
-            new Vector3(-0.5f, 0, 0),
-            new Vector3(-0.5f, 1, 0),
-            new Vector3(0.5f, 1, 0),
-            new Vector3(0.5f, 0, 0)
-        };
-
-        mesh.uv = new Vector2[]
-        {
-            new Vector2(0, 0),
-            new Vector2(0, 1),
-            new Vector2(1, 1),
-            new Vector2(1, 0)
-        };
-
-        mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3 };
-
-        //ShadowMesh.mesh = mesh;
-        //SpriteMesh.mesh = mesh;
-    }
 
 }
