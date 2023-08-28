@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterTemplate : MonoBehaviour
+[CreateAssetMenu]
+public class CharacterTemplate : ScriptableObject
 {
     public AnimationData IdleAnimation;
     public AnimationData WalkAnimation;
