@@ -33,7 +33,7 @@ public class Character : MonoBehaviour
     void Update()
     {
         WalkUpdate();
-        PinToSpline();
+        //PinToSpline();
         AnimationUpdate();
     }
 
@@ -49,27 +49,29 @@ public class Character : MonoBehaviour
 
         Animation = Template.IdleAnimation;
 
+        var direction = Vector3.zero;
+
         if (Input.GetKey(KeyCode.D))
         {
-            Offset += 1;
+            direction += transform.right;
             Flipped = 1;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            Offset -= 1;
+            direction -= transform.right;
             Flipped = -1;
         }
 
         if (Input.GetKey(KeyCode.W))
         {
-            ZOffset += 1;
+            direction += transform.forward;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            ZOffset -= 1;
+            direction -= transform.forward;
         }
 
-        if (Offset != 0 || ZOffset != 0)
+        if (direction != Vector3.zero)
         {
             Animation = Template.WalkAnimation;
             if (Input.GetKey(KeyCode.LeftShift))
@@ -78,9 +80,8 @@ public class Character : MonoBehaviour
             }
         }
 
-        roadPosition += Offset * Animation.Speed * Time.deltaTime;
-        roadZOffset += ZOffset * Animation.Speed * Time.deltaTime;
-        roadZOffset = Mathf.Clamp(roadZOffset, -1f, 1f);
+        transform.GetComponent<Rigidbody>().velocity = direction.normalized * Animation.Speed;
+
 
         SpriteRenderer.material.mainTexture = Animation.Texture;
         ShadowRenderer.material.mainTexture = Animation.Texture;
@@ -99,8 +100,8 @@ public class Character : MonoBehaviour
         transform.position = pos;
         transform.right = tangent;
 
-        SpriteRenderer.transform.localPosition = new Vector3(0, 0.5f, roadZOffset);
-        ShadowRenderer.transform.localPosition = new Vector3(0, 0.5f, roadZOffset);
+        SpriteRenderer.transform.localPosition = new Vector3(0, 0, roadZOffset);
+        ShadowRenderer.transform.localPosition = new Vector3(0, 0, roadZOffset);
     }
 
 
