@@ -8,11 +8,13 @@ using UnityEngine.UIElements;
 using UnityEngine.Splines;
 using Spline = UnityEngine.Splines.Spline;
 using UnityEngine.Playables;
+using System;
+using System.Linq;
 
 public class Character : MonoBehaviour
 {
     public CharacterTemplate Template;
-    public SplineContainer Road;
+    private List<SplineContainer> Roads;
 
     public MeshRenderer ShadowRenderer;
     public MeshRenderer SpriteRenderer;
@@ -25,16 +27,19 @@ public class Character : MonoBehaviour
     public float Offset = 0;
     public float ZOffset = 0;
 
+    public Transform Pin;
+
     private void Start()
     {
         Animation = Template.IdleAnimation;
+        Roads = GameObject.FindObjectsOfType<SplineContainer>().ToList();
     }
 
     void Update()
     {
         WalkUpdate();
-        //PinToSpline();
         AnimationUpdate();
+        PinToSpline();
     }
 
     private Vector3 ToVec(float3 value)
@@ -93,15 +98,35 @@ public class Character : MonoBehaviour
 
     void PinToSpline()
     {
-        var k = roadPosition / Road.Spline.CalculateLength(Matrix4x4.identity);
-        Road.Spline.Evaluate(k, out float3 position, out float3 tangent, out float3 up);
+        var anchors = new List<SplineAnchor>();
+        foreach (var road in Roads)
+        {
+            anchors.Add(GetSplineAnchor(road));
+        }
 
-        Vector3 pos = Road.transform.position + ToVec(position);
-        transform.position = pos;
-        transform.right = tangent;
 
-        SpriteRenderer.transform.localPosition = new Vector3(0, 0, roadZOffset);
-        ShadowRenderer.transform.localPosition = new Vector3(0, 0, roadZOffset);
+        var direction = Vector3.zero;
+        foreach (var anchor in anchors)
+        {
+            var w = 1.0f / anchor.Distance;
+            direction += anchor.Direction * w;
+        }
+
+        transform.forward = direction;
+    }
+
+    SplineAnchor GetSplineAnchor(SplineContainer road)
+    {
+        var roadOffset = road.transform.position;
+        SplineUtility.GetNearestPoint(road.Spline, transform.position - roadOffset, out float3 nearest, out float t, 20, 4);
+        road.Spline.Evaluate(t, out nearest, out float3 tangent, out float3 up);
+
+        var pinPosition = roadOffset + ToVec(nearest);
+        Pin.transform.position = roadOffset + ToVec(nearest);
+
+        var distance = (pinPosition - transform.position).magnitude;
+        var direction = new Vector3(-tangent.z, 0, tangent.x).normalized;
+        return new SplineAnchor { Distance = distance, Direction = direction };   
     }
 
 
